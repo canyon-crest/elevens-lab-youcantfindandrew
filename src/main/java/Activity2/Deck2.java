@@ -31,7 +31,13 @@ public class Deck2 {
 	 * @param values is an array containing all of the card point values.
 	 */
 	public Deck2(String[] ranks, String[] suits, int[] values) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
+		cards = new ArrayList<Card2>();
+		for (int i = 0; i < ranks.length; i++) {
+			for (int j = 0; j < suits.length; j++) {
+				cards.add(new Card2(ranks[i], suits[j], values[i]));
+			}
+		}
+		size = cards.size();
 	}
 
 
@@ -40,8 +46,7 @@ public class Deck2 {
 	 * @return true if this deck is empty, false otherwise.
 	 */
 	public boolean isEmpty() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
-		return true;
+		return size == 0;
 	}
 
 	/**
@@ -49,8 +54,7 @@ public class Deck2 {
 	 * @return the number of undealt cards in this deck.
 	 */
 	public int size() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
-		return -1;
+		return size;
 	}
 
 	/**
@@ -67,8 +71,11 @@ public class Deck2 {
 	 *         previously dealt.
 	 */
 	public Card2 deal() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
-		return new Card2("","",-1);
+		if (isEmpty()) {
+			return null;
+		}
+		size--;
+		return cards.get(size);
 	}
 
 	/**

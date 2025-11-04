@@ -185,7 +185,16 @@ public class ElevensBoard7 {
 	 *         false otherwise.
 	 */
 	public boolean isLegal(List<Integer> selectedCards) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		if (selectedCards == null) {
+			return false;
+		}
+		if (selectedCards.size() == 2) {
+			return containsPairSum11(selectedCards);
+		}
+		if (selectedCards.size() == 3) {
+			return containsJQK(selectedCards);
+		}
+		return false;
 	}
 
 	/**
@@ -197,7 +206,8 @@ public class ElevensBoard7 {
 	 *         false otherwise.
 	 */
 	public boolean anotherPlayIsPossible() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		List<Integer> indexes = cardIndexes();
+		return containsPairSum11(indexes) || containsJQK(indexes);
 	}
 
 
@@ -219,7 +229,24 @@ public class ElevensBoard7 {
 	 *              contain an 11-pair; false otherwise.
 	 */
 	private boolean containsPairSum11(List<Integer> selectedCards) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		for (int i = 0; i < selectedCards.size(); i++) {
+			int indexI = selectedCards.get(i);
+			Card7 cardI = cards[indexI];
+			if (cardI == null) {
+				continue;
+			}
+			for (int j = i + 1; j < selectedCards.size(); j++) {
+				int indexJ = selectedCards.get(j);
+				Card7 cardJ = cards[indexJ];
+				if (cardJ == null) {
+					continue;
+				}
+				if (cardI.pointValue() + cardJ.pointValue() == 11) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -231,6 +258,23 @@ public class ElevensBoard7 {
 	 *              include a jack, a queen, and a king; false otherwise.
 	 */
 	private boolean containsJQK(List<Integer> selectedCards) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		boolean hasJack = false;
+		boolean hasQueen = false;
+		boolean hasKing = false;
+		for (Integer idx : selectedCards) {
+			Card7 c = cards[idx.intValue()];
+			if (c == null) {
+				continue;
+			}
+			String r = c.rank();
+			if ("jack".equals(r)) {
+				hasJack = true;
+			} else if ("queen".equals(r)) {
+				hasQueen = true;
+			} else if ("king".equals(r)) {
+				hasKing = true;
+			}
+		}
+		return hasJack && hasQueen && hasKing;
 	}
 }

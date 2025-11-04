@@ -10,7 +10,7 @@ public class ElevensBoard10 extends Board10 {
 	/**
 	 * The size (number of cards) on the board.
 	 */
-	private static final int BOARD_SIZE = 9;
+	private static final int BOARD_SIZE = 10;
 
 	/**
 	 * The ranks of the cards for this game to be sent to the deck.

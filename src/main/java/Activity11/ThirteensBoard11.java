@@ -47,11 +47,13 @@ public class ThirteensBoard11 extends Board11 {
 	 */
 	@Override
 	public boolean isLegal(List<Integer> selectedCards) {
-		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
+		if (selectedCards == null) {
+			return false;
+		}
 		if (selectedCards.size() == 1) {
-			return containsKing(selectedCards);
+			return findKing(selectedCards).size() > 0;
 		} else if (selectedCards.size() == 2) {
-			return containsPairSum13(selectedCards);
+			return findPairSum13(selectedCards).size() > 0;
 		} else {
 			return false;
 		}
@@ -66,9 +68,8 @@ public class ThirteensBoard11 extends Board11 {
 	 */
 	@Override
 	public boolean anotherPlayIsPossible() {
-		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
 		List<Integer> cIndexes = cardIndexes();
-		return containsPairSum13(cIndexes) || containsKing(cIndexes);
+		return findPairSum13(cIndexes).size() > 0 || findKing(cIndexes).size() > 0;
 	}
 
 	/**
@@ -79,18 +80,28 @@ public class ThirteensBoard11 extends Board11 {
 	 * @return a list of the indexes of an 13-pair, if an 13-pair was found;
 	 *         an empty list, if an 13-pair was not found.
 	 */
-	private boolean containsPairSum13(List<Integer> selectedCards) {
-		/* *** TO BE CHANGED INTO findPairSum13 IN ACTIVITY 11 *** */
+	private List<Integer> findPairSum13(List<Integer> selectedCards) {
+		List<Integer> result = new ArrayList<Integer>();
 		for (int sk1 = 0; sk1 < selectedCards.size(); sk1++) {
 			int k1 = selectedCards.get(sk1).intValue();
+			Card11 c1 = cardAt(k1);
+			if (c1 == null) {
+				continue;
+			}
 			for (int sk2 = sk1 + 1; sk2 < selectedCards.size(); sk2++) {
 				int k2 = selectedCards.get(sk2).intValue();
-				if (cardAt(k1).pointValue() + cardAt(k2).pointValue() == 13) {
-					return true;
+				Card11 c2 = cardAt(k2);
+				if (c2 == null) {
+					continue;
+				}
+				if (c1.pointValue() + c2.pointValue() == 13) {
+					result.add(Integer.valueOf(k1));
+					result.add(Integer.valueOf(k2));
+					return result;
 				}
 			}
 		}
-		return false;
+		return result;
 	}
 
 	/**
@@ -101,15 +112,17 @@ public class ThirteensBoard11 extends Board11 {
 	 * @return a list of the index of a king, if a king was found;
 	 *         an empty list, if a king was not found.
 	 */
-	private boolean containsKing(List<Integer> selectedCards) {
-		/* *** TO BE CHANGED INTO findKing IN ACTIVITY 11 *** */
+	private List<Integer> findKing(List<Integer> selectedCards) {
+		List<Integer> result = new ArrayList<Integer>();
 		for (Integer kObj : selectedCards) {
 			int k = kObj.intValue();
-			if (cardAt(k).rank().equals("king")) {
-				return true;
+			Card11 c = cardAt(k);
+			if (c != null && "king".equals(c.rank())) {
+				result.add(kObj);
+				return result;
 			}
 		}
-		return false;
+		return result;
 	}
 
 	/**
@@ -117,8 +130,13 @@ public class ThirteensBoard11 extends Board11 {
 	 * @return true if a legal play was found (and made); false othewise.
 	 */
 	public boolean playIfPossible() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		if (playPairSum13IfPossible()) {
+			return true;
+		}
+		if (playKingIfPossible()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -128,8 +146,13 @@ public class ThirteensBoard11 extends Board11 {
 	 * @return true if an 13-pair play was found (and made); false othewise.
 	 */
 	private boolean playPairSum13IfPossible() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		List<Integer> cIndexes = cardIndexes();
+		List<Integer> pair = findPairSum13(cIndexes);
+		if (pair.size() > 0) {
+			replaceSelectedCards(pair);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -139,7 +162,12 @@ public class ThirteensBoard11 extends Board11 {
 	 * @return true if a king play was found (and made); false othewise.
 	 */
 	private boolean playKingIfPossible() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		List<Integer> cIndexes = cardIndexes();
+		List<Integer> king = findKing(cIndexes);
+		if (king.size() > 0) {
+			replaceSelectedCards(king);
+			return true;
+		}
+		return false;
 	}
 }
